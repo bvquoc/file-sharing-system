@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+      - '5010:5010'
+    networks:
+      - lb-net
+    depends_on:
+      - gateway1
+      - gateway2
+
+  gateway1:
+    build:
+      context: ./gateways
+      dockerfile: Dockerfile.gateway
+    ports:
+      - '5050:8080'
+    environment:
+      - GATEWAY_NAME=gateway1
+    networks:
+      - lb-net
+    depends_on:
+      - app1
+      - app2
+      - app3
+      - app4
+
+  gateway2:
+    build:
+      context: ./gateways
+      dockerfile: Dockerfile.gateway
+    ports:
+      - '5051:8080'
+    environment:
+      - GATEWAY_NAME=gateway2
+    networks:
+      - lb-net
+    depends_on:
+      - app1
+      - app2
+      - app3
+      - app4
+
+  app1:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.server
+    environment:
+      - SERVER_NAME=app1
+    networks:
+      - lb-net
+
+  app2:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.server
+    environment:
+      - SERVER_NAME=app2
+    networks:
+      - lb-net
+
+  app3:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.server
+    environment:
+      - SERVER_NAME=app3
+    networks:
+      - lb-net
+
+  app4:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.server
+    environment:
+      - SERVER_NAME=app4
+    networks:
+      - lb-net
+
+networks:
+  lb-net:

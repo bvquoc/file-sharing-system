@@ -1,0 +1,12 @@
+FROM golang:1.19-alpine
+
+WORKDIR /app
+RUN go mod init server
+
+COPY *.go ./
+
+RUN go build -o /server
+
+EXPOSE 5678
+
+CMD ["/server"]
